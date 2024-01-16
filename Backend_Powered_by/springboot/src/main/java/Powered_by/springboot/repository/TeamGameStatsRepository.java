@@ -95,13 +95,13 @@ public interface TeamGameStatsRepository extends JpaRepository<TeamGameStats, In
             "    arena a ON g.arena = a.id_arena " +
             "JOIN " +
             "    team tHomeTeam ON tHome.id_team = tHomeTeam.id_team " +
-            "JOIN Score sHome ON sHome.id_team = tHomeTeam.id_team " +
+            "JOIN score sHome ON sHome.id_team = tHomeTeam.id_team " +
             "JOIN " +
             "    team_game_stats tVisitor ON tVisitor.id_game = g.id_game AND tVisitor.id_team != tHomeTeam.id_team " +
 
             "JOIN " +
             "    team tVisitorTeam ON tVisitor.id_team = tVisitorTeam.id_team " +
-            "JOIN Score sVisitors ON sVisitors.id_team = tVisitorTeam.id_team " +
+            "JOIN score sVisitors ON sVisitors.id_team = tVisitorTeam.id_team " +
             "WHERE " +
             "    g.id_game = :gameId " +
             "GROUP BY " +
