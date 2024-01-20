@@ -19,6 +19,8 @@ public class TeamSeasonResponse {
     private Double height;
     private String pos;
     private Integer shirtNumber;
+    private String img;
+    private String logoCountry;
 
     public TeamSeasonResponse() {
 

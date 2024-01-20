@@ -9,10 +9,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
 public interface LeagueRepository extends JpaRepository<League, Long> {
+    /**
+     * Metodo per trovare l id della lega attraverso il nome della lega
+     * @param nameLeague nome della lega
+     * @return identificativo della lega
+     */
     @Query("SELECT idLeague " +
             "FROM League " +
-            "WHERE LOWER(nameLeague) = LOWER(:idLeague)")
-    Integer findByNameLeague(@Param("idLeague") String idLeague);
+            "WHERE LOWER(nameLeague) = LOWER(:nameLeague)")
+    Integer findByNameLeague(@Param("nameLeague") String nameLeague);
 
 
 }

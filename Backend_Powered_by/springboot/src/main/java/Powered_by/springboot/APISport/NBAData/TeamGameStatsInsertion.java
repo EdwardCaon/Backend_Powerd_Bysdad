@@ -18,7 +18,7 @@ public class TeamGameStatsInsertion {
         APIClient apiClient = new APIClient();
 
         try {
-            List<Integer> gameIds = getGameIdsFromDatabase(30, 10); // Sostituisci 0 e 10 con i valori desiderati
+            List<Integer> gameIds = getGameIdsFromDatabase(50, 5); // Sostituisci 0 e 10 con i valori desiderati
             for (Integer idGame : gameIds) {
                 String responseData = apiClient.getData("games/statistics/?id=" + idGame);
                 System.out.println("Team Data: " + responseData.toString());

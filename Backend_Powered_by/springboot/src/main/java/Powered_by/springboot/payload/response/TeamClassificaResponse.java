@@ -1,5 +1,6 @@
 package Powered_by.springboot.payload.response;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +15,10 @@ public class TeamClassificaResponse {
     private String teamLogo;
     private String teamName;
     private String colour;
-    private Long victories;
+    private Integer victories;
     private Double winPercentage;
-    private Long lose;
-    private Long gamePlayed;
+    private Integer lose;
+    private Integer gamePlayed;
     private Integer diffPoints;
 
     // Costruttore e metodi accessori possono essere generati da Lombok

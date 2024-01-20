@@ -18,11 +18,21 @@ public class TeamGameService {
     @Autowired
     private TeamGameStatsRepository teamGameStatsRepository;
 
+    /**
+     * Metodo per ricevere la lista di statistiche per game dei team
+     * @param idGame identificativo del game
+     * @return lista di statistiche dei team per game
+     */
     public List<GameStatsResponse> getTeamGameStats(int idGame) {
         List<Object[]> gameStatsResponse = teamGameStatsRepository.findByGameId(idGame);
         return mapToTeamGameStatsResponseList(gameStatsResponse);
     }
 
+    /**
+     * Metodo per convertire la lista di oggetti in lista di oggetti di tipo GameStatsResponse
+     * @param gameStatsObjects lista di oggetti
+     * @return lista di entita GameStatsResponse
+     */
     private List<GameStatsResponse> mapToTeamGameStatsResponseList(List<Object[]> gameStatsObjects) {
         List<GameStatsResponse> gameStatsResponse = new ArrayList<>();
         for (int i = 0; i < gameStatsObjects.size(); i++) {
@@ -111,17 +121,40 @@ public class TeamGameService {
         return gameStatsResponse;
     }
 
+    /**
+     * Metodo per settare le value degli oggetti in numeri Integer e se nulli a 0
+     * @param value valore dell oggetto
+     * @return valore dell oggetto castato in Integer
+     */
     private Integer getInteger(Object value) {
         return (value instanceof Integer) ? (Integer) value : 0;
     }
 
+    /**
+     * Metodo per settare le value degli oggetti in numeri Float e se nulli a 0
+     * @param value valore dell oggetto
+     * @return valore dell oggetto castato in Float
+     */
     private Float getFloat(Object value) {
         return (value instanceof Float) ? (Float) value : 0.0f;
     }
 
+    /**
+     * Metodo per settare le value degli oggetti in stringhe
+     * @param value valore della stringa
+     * @return il valore dell object castato in stringa
+     */
+
     private String getString(Object value) {
         return (value instanceof String) ? (String) value : "N/D";
     }
+
+    /**
+     * Metodo per calolare quanto un team ha giocato
+     * @param start inizio partita
+     * @param end fine partita
+     * @return minuti giocati in campo, N/D  se non e possibile calcolare
+     */
     private String calculateDuration(Object start, Object end) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

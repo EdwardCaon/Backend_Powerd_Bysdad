@@ -29,9 +29,10 @@ public class Player {
     @Column(name = "date_of_birthday")
     private LocalDate dateOfBirth;
 
-    @Size(max = 50)
-    @Column(name = "country")
-    private String country;
+    @ManyToOne
+    @JoinColumn(name = "country")
+    private Country country;
+
     @Column(name = "started_year")
     private Integer startedYear;
     @Column(name = "pro")
@@ -67,7 +68,7 @@ public class Player {
         return dateOfBirth;
     }
 
-    public String getCountry() {
+    public Country getCountry() {
         return country;
     }
 

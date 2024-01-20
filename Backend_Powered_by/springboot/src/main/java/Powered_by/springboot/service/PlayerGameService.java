@@ -15,11 +15,20 @@ public class PlayerGameService {
     @Autowired
     private PlayerStatsRepository playerStatsRepository;
 
+    /**
+     * Metodo per avere le statistiche dei player di un determinato game
+     * @param idGame identificativo del game
+     * @return lista di player e statistiche inerenti al game
+     */
     public List<PlayerStatsGameResponse> getPlayerStatsRepository(Long idGame) {
         List<Object[]> playerStatsObjects = playerStatsRepository.getPlayerStatsByIdGame(idGame);
         return mapToPlayerStatsGameResponse(playerStatsObjects);
     }
-
+    /**
+     * Metodo per convertire la lista di oggetti in lista di oggetti di tipo PlayerStatsGameResponse
+     * @param playerStatsObjects lista di oggetti
+     * @return lista di entita PlayerStatsGameResponse
+     */
     private List<PlayerStatsGameResponse> mapToPlayerStatsGameResponse(List<Object[]> playerStatsObjects) {
         List<PlayerStatsGameResponse> playerStatsGameResponses = new ArrayList<>();
 

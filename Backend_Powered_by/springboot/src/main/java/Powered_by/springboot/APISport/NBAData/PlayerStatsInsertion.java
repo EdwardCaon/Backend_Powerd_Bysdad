@@ -16,7 +16,7 @@ public class PlayerStatsInsertion {
 
         try {
             // Get all team IDs from the database
-            List<Integer> teamIds = getTeamIdsFromDatabase(6, 10);
+            List<Integer> teamIds = getTeamIdsFromDatabase(0, 10);
 
             // Get all season years from the database
             List<Integer> seasonYears = getSeasonYearsFromDatabase();
@@ -67,7 +67,7 @@ public class PlayerStatsInsertion {
     private static List<Integer> getSeasonYearsFromDatabase() {
         // Implement the logic to get season years from the database
         // ...
-        List<Integer> data = Collections.singletonList(2022); // Example, replace with your database access logic
+        List<Integer> data = Collections.singletonList(2023); // Example, replace with your database access logic
         return data;
     }
 

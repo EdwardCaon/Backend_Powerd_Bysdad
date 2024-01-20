@@ -12,7 +12,12 @@ import java.util.List;
 
 @Repository
 public interface TeamGameStatsRepository extends JpaRepository<TeamGameStats, Integer> {
-    /*@Query("SELECT NEW Powered_by.springboot.payload.response.GameStatsResponse(" +
+    /**
+     * Deprecato - Vecchio metodo per ricevere i dati specifici di un game
+     * @param idGame identificativo del game
+     * @return lista di dati relativi al game ricercato
+     */
+    @Query("SELECT NEW Powered_by.springboot.payload.response.GameStatsResponse(" +
             "g.idGame, a.nameArena, a.city, t.nameTeam, t.logo, s.p1, s.p2, s.p3, s.p4, s.p5) " +
             "FROM TeamGameStats tgs " +
             "JOIN tgs.game g " +
@@ -21,9 +26,13 @@ public interface TeamGameStatsRepository extends JpaRepository<TeamGameStats, In
             "JOIN Score s ON s.id.idGame = g.idGame " +
             "WHERE g.idGame = :idGame " +
             "GROUP BY  t.nameTeam")
-    List<GameStatsResponse> findByGameIdPROVA(@Param("idGame") int idGame);*/
+    List<GameStatsResponse> findByGameIdPROVA(@Param("idGame") int idGame);
 
-
+    /**
+     * Metodo per avere TUTTI i dettagli e le statistiche di entrambe i team all interno di una partita specifica
+     * @param gameId identificativo del game
+     * @return TUTTI i dettagli e le statistiche di entrambe i team di una partita
+     */
     @Query(value = "SELECT " +
             "    g.id_game AS gameId, " +
             "    a.name_arena AS arenaName, " +
@@ -108,7 +117,11 @@ public interface TeamGameStatsRepository extends JpaRepository<TeamGameStats, In
             "   g.id_game ", nativeQuery = true)
     List<Object[]> findByGameId(@Param("gameId") int gameId);
 
-/*
+    /**
+     * Deprecato - Vecchio metodo per ricevere tutte le statistiche di un game
+     * @param gameId identificativo del game
+     * @return lista di statistiche relative al game ricercato
+     */
     @Query("SELECT NEW Powered_by.springboot.payload.response.TeamGameStatsResponse(" +
             "g.idGame, t.nameTeam ,tgs.ftm, (tgs.fgm - tgs.tpm) * 2, tgs.tpm * 3, tgs.points, " +
             "tgs.totReb, tgs.offReb, (tgs.totReb - tgs.offReb), tgs.assists, tgs.blocks, " +
@@ -120,7 +133,7 @@ public interface TeamGameStatsRepository extends JpaRepository<TeamGameStats, In
             "JOIN g.arena a " +
             "JOIN tgs.team t " +
             "WHERE g.idGame = :gameId")
-    List<TeamGameStatsResponse> findStatsByGameId(@Param("gameId") int gameId);*/
+    List<TeamGameStatsResponse> findStatsByGameId(@Param("gameId") int gameId);
 
 
 }

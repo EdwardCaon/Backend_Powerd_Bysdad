@@ -18,11 +18,22 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
+    /**
+     * Metodo per ricevere una lista di partite inerenti ad una giornata
+     * @param startOfDay inizio giornata
+     * @param endOfDay fine giornata
+     * @return lista di game di una giornata
+     */
     public List<GameDayResponse> getGamesForDayRange(LocalDateTime startOfDay, LocalDateTime endOfDay) {
         List<Object[]> resultList = gameRepository.getGamesForDayRange(startOfDay, endOfDay);
         return mapToGameforDayResponse(resultList);
     }
 
+    /**
+     * Metodo per mappare i risultati delle query inerenti ai game
+     * @param resultList lista di oggetti
+     * @return lista mappata sulla relativa response (entita)
+     */
     private List<GameDayResponse> mapToGameforDayResponse(List<Object[]> resultList) {
         // Create a list for gameDayResponse objects
         List<GameDayResponse> gameDayResponses = new ArrayList<>();
@@ -59,11 +70,24 @@ public class GameService {
         return gameDayResponses;
     }
 
+    /**
+     * Metodo per ricercare tutte le partite di un team specifico
+     * @param idTeam identificativo del team
+     * @param startOfDay giorno di oggi
+     * @param endOfDay giorno del passato (3 mesi prima di oggi)
+     * @return  lista di partite passate di un team specifico
+     */
     public List<GameDayResponse> getGameForTeam(int idTeam, LocalDateTime startOfDay, LocalDateTime endOfDay){
         List<Object[]> resultList =gameRepository.getGameForTeam(idTeam, startOfDay, endOfDay);
         return mapToGameforDayResponse(resultList);
     }
 
+    /**
+     * Metodo per ricercare le prossime sei partite di un team specifico
+     * @param idTeam  identificativo del team
+     * @param startOfDay giorno di oggi
+     * @return lista di sei partite di un team specifico
+     */
     public List<GameDayResponse> getProgrammate(int idTeam, LocalDateTime startOfDay){
         List<Object[]> resultList =gameRepository.getProgrammate(idTeam, startOfDay);
         return mapToGameforDayResponse(resultList);

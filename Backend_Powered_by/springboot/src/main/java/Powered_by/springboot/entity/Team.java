@@ -45,8 +45,9 @@ public class Team {
     @Size(max = 255)
     private String logo;
 
+    @Column(name = "allStar")
     private Boolean allStar;
-
+    @Column(name = "nbaFranchise")
     private Boolean nbaFranchise;
 
     public Team() {

@@ -33,7 +33,7 @@ public class TokenService {
          * Metodo per implementare il token<br>
          * Utiliziamo un algorimto per il token, dove li passiamo la nostra chiave per la criptazione e decriptazione<br>
          * Quando vieni creato il token noi ci mettiamo al suo interno l'id dell'utente<br>
-         * Il token ha una durata, e scade dopo un tot
+         * Il token ha una durata, e scade dopo un intervallo dichiarato come EXPIRE_AFTER=3600
          *
          * @param userId che diventerà il token
          * @return the string

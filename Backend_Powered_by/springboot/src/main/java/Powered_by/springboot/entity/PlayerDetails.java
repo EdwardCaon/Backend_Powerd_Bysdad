@@ -31,6 +31,8 @@ public class PlayerDetails {
 
     @Column(name = "shirt_number")
     private Integer shirtNumber;
+    @Column(name = "img")
+    private String img;
 
     // Constructors, getters (if needed), no setters for embedded ID
 
@@ -61,4 +63,5 @@ public class PlayerDetails {
     public Integer getShirtNumber() {
         return shirtNumber;
     }
+    public String getImg(){return  img;}
 }

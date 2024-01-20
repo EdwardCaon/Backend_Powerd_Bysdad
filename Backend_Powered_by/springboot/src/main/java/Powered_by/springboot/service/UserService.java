@@ -20,6 +20,12 @@ public class UserService {
     private final UserRepository userRepository;
     private  final TokenService tokenService;
 
+
+    /**
+     * Trasforma la request in un entita per controllare se l'utente esiste gia
+     * @param request
+     * @return classe User
+     */
     private User fromRequestToEntity(SignupRequest request) {
         User u = new User();
 
@@ -32,6 +38,12 @@ public class UserService {
         return u;
     }
 
+    /**
+     * Metodo utilizzato per la registrazione
+     * @param request contiene i dati utili alla registrazione quale firstname, lastname, email, password di almeno sei caratteri
+     * @return ritorna l'entita appeana creata qual ora avvenisse la registrazione,  qual ora cio non avviene viene ritornata un entita la quale comunica
+     *          l esito negativo della registrazione
+     */
     public ResponseEntity<?> save (SignupRequest request){
         User newuser=fromRequestToEntity(request);
         User olduser=userRepository.findByEmail(request.getEmail());
@@ -40,6 +52,13 @@ public class UserService {
         }
         return new ResponseEntity<>("utente già esistente",HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * Metodo per l accesso da parte di un utente registrato
+     * @param request contiene i dati utili all accessi quali mail e password
+     * @return AuthResponse qual ora l accesso avvenga correttamente e contiene i dati dell utente piu il token per la sessione , qual ora non lo fosse viene ritornata un entita la quale comunica
+     *      * l esito negativo dell accesso
+     */
     public ResponseEntity<?> signin(SigninRequest request) {
         Optional<User> u = userRepository.findByEmailAndAndPassword(request.getEmail(), DigestUtils.sha256Hex(request.getPassword()));
         if (u.isPresent()) {

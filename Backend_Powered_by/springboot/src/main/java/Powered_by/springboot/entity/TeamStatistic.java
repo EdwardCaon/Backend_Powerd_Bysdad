@@ -22,7 +22,14 @@ public class TeamStatistic {
 
     @Column(name = "games_played")
     private Integer gamesPlayed;
-
+    @Column(name = "rank")
+    private Integer rank;
+    @Column(name = "win")
+    private Integer win;
+    @Column(name = "lose")
+    private Integer lose;
+    @Column(name = "win_percentage")
+    private Double winPercentage;
     @Column(name = "fast_break_points")
     private Integer fastBreakPoints;
 
@@ -115,6 +122,7 @@ public class TeamStatistic {
     public Integer getGamesPlayed() {
         return gamesPlayed;
     }
+
 
     public Integer getFastBreakPoints() {
         return fastBreakPoints;

@@ -8,7 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
 public interface SeasonRepository extends  JpaRepository<Season, Long> {
-
+    /**
+     * Metodo per trovare identificativo di una stagione attraverso il nome/anno
+     * @param season anno/nome della stagione
+     * @return identificativo della stagione
+     */
     @Query("SELECT idSeason " +
             "FROM Season " +
             "WHERE  season = :season")

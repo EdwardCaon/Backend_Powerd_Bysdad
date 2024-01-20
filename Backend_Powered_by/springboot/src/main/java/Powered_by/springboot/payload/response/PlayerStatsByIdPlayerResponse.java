@@ -16,6 +16,8 @@ public class PlayerStatsByIdPlayerResponse {
     private Double freeThrowPercentage;
     private Double threePointPercentage;
     private Long fieldGoalsMade;
+    private Double avgMinutes;
+    private Long gamePlayed;
 
     // Costruttore, getter e setter...
     public PlayerStatsByIdPlayerResponse() {

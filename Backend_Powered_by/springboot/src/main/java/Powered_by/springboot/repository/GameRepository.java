@@ -12,6 +12,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Integer> {
+    /**
+     * Metodo usato nella home, restiuisce una lista di partite inerenti al giorno inserito
+     * @param startOfDay inizio della giornata
+     * @param endOfDay fine della giornata
+     * @return lista di parite
+     */
 
     @Query("SELECT " +
             "g.idGame, g.start, " +
@@ -28,6 +34,13 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
             @Param("startOfDay") LocalDateTime startOfDay,
             @Param("endOfDay") LocalDateTime endOfDay);
 
+    /**
+     * Metodo per ricercare le partite di un team specifico  degli ultimi tre mesi
+     * @param idTeam identificativo del team
+     * @param startOfDay giorno corrente
+     * @param endOfDay giorno del passato
+     * @return lista di game passati
+     */
     @Query("SELECT " +
             "g.idGame, g.start, " +
             "t.nameTeam, t.logo, t.colour, s.p1, s.p2, s.p3, s.p4, s.p5, " +
@@ -44,6 +57,12 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
             @Param("startOfDay") LocalDateTime startOfDay,
             @Param("endOfDay") LocalDateTime endOfDay);
 
+    /**
+     * Metodo per ricercare le prossime sei partite programmate di un team specifico
+     * @param idTeam identificativo del team
+     * @param startOfDay giorno di oggi
+     * @return lista delle prossime sei partite a partire dal giorno corrente
+     */
     @Query("SELECT " +
             "g.idGame, g.start, " +
             "t.nameTeam AS homeTeamName, t.logo AS homeTeamLogo, t.colour AS homeTeamColour,  " +

@@ -44,10 +44,25 @@ public class TeamController {
         return  teamService.getPlayerStatsTeamByIdPlayer(idPlayer, season);
     }
 
-    //
-    @GetMapping("/teamById/{idTeam}")
-    public List<Team> getTeamById (@PathVariable int idTeam) {
-        return teamService.getTeamById(idTeam);
+    /**
+     * Restituisce le informazioni di uno specifico  team
+     * @param nameTeam nome del team Stringa per cercare il team
+     * @return l'oggetto del team ricercato
+     */
+    @GetMapping("/teamById/{nameTeam}")
+    public ResponseEntity<?> getTeamById (@PathVariable String nameTeam) {
+        return teamService.getTeamById(nameTeam);
+    }
+
+    /**
+     * restituisce le statistiche stagionali di un team
+     * @param idTeam identificativo del team
+     * @param season anno della stagione con la quale cercare l id della season
+     * @return un entita in base all esito della query, le statistiche se va a buon fine altrimenti degli avvisi di errore come l inserimento sbagliato della season
+     */
+    @GetMapping("/season/stats/{idTeam}/{season}")
+    public ResponseEntity<?> getTeamStatsSeason(@PathVariable int idTeam, @PathVariable int season){
+        return  teamService.getTeamStatsSeason( idTeam, season);
     }
 
 }

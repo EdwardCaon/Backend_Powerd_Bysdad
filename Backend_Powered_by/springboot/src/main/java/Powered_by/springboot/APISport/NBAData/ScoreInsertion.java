@@ -33,7 +33,17 @@ public class ScoreInsertion {
             JSONArray gamesArray = new JSONObject(json).getJSONArray("response");
 
             String scoreInsertQuery = "INSERT INTO score (id_game, id_team, total_win, total_lose, series_win, series_loss, p1, p2, p3, p4, p5, total_points) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
+                    "ON DUPLICATE KEY UPDATE total_win," +
+                    " total_lose," +
+                    " series_win," +
+                    " series_loss," +
+                    " p1," +
+                    " p2," +
+                    " p3 = VALUE(p3)," +
+                    " p4 = VALUE(p4)," +
+                    " p5 = VALUE(p5)," +
+                    " total_points = VALUE(total_points) ";
 
             try (PreparedStatement scoreStatement = connection.prepareStatement(scoreInsertQuery)) {
                 for (int i = 0; i < gamesArray.length(); i++) {
