@@ -12,7 +12,7 @@ public class APIClient {
 
     public String getData(String endpoint) throws Exception {
         String apiUrl = "https://v2.nba.api-sports.io/" + endpoint;
- // e192b1c9e1b945372893787b520ccade dani
+        // e192b1c9e1b945372893787b520ccade dani
         //745e9d0949114fdba6fc415b1b3d66b2 eddy
         Request request = new Request.Builder()
                 .url(apiUrl)

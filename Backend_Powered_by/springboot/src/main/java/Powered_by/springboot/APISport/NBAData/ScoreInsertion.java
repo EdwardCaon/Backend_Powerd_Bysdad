@@ -31,19 +31,19 @@ public class ScoreInsertion {
     private static void insertScores(String json) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
             JSONArray gamesArray = new JSONObject(json).getJSONArray("response");
-
             String scoreInsertQuery = "INSERT INTO score (id_game, id_team, total_win, total_lose, series_win, series_loss, p1, p2, p3, p4, p5, total_points) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
-                    "ON DUPLICATE KEY UPDATE total_win," +
-                    " total_lose," +
-                    " series_win," +
-                    " series_loss," +
-                    " p1," +
-                    " p2," +
-                    " p3 = VALUE(p3)," +
-                    " p4 = VALUE(p4)," +
-                    " p5 = VALUE(p5)," +
-                    " total_points = VALUE(total_points) ";
+                    "ON DUPLICATE KEY UPDATE total_win = VALUES(total_win)," +
+                    " total_lose = VALUES(total_lose)," +
+                    " series_win = VALUES(series_win)," +
+                    " series_loss = VALUES(series_loss)," +
+                    " p1 = VALUES(p1)," +
+                    " p2 = VALUES(p2)," +
+                    " p3 = VALUES(p3)," +
+                    " p4 = VALUES(p4)," +
+                    " p5 = VALUES(p5)," +
+                    " total_points = VALUES(total_points)";
+
 
             try (PreparedStatement scoreStatement = connection.prepareStatement(scoreInsertQuery)) {
                 for (int i = 0; i < gamesArray.length(); i++) {
@@ -63,11 +63,6 @@ public class ScoreInsertion {
     private static void insertScoreForTeam(Connection connection, PreparedStatement scoreStatement, int gameId, JSONObject teamScores, JSONObject teamInfo) throws SQLException {
         int teamId = teamInfo.getInt("id");
 
-        // Verifica preliminare se lo score esiste già
-        if (isScoreExists(connection, gameId, teamId)) {
-            System.out.println("Score already exists for gameId: " + gameId + ", teamId: " + teamId + ". Skipping insert.");
-            return;
-        }
 
         int totalWin = teamScores.has("win") && !teamScores.isNull("win") ? teamScores.getInt("win") : 0;
         int totalLose = teamScores.has("loss") && !teamScores.isNull("loss") ? teamScores.getInt("loss") : 0;

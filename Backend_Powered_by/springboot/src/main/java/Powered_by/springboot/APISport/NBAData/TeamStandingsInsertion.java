@@ -25,7 +25,7 @@ public class TeamStandingsInsertion {
             // Itera su tutte le stagioni
             for (Integer seasonYear : seasonYears) {
                 // Effettua una chiamata per ottenere i dati degli standings
-                String standingsResponse = apiClient.getData("standings?league=standard&season=" + seasonYear + "&conference=East");
+                String standingsResponse = apiClient.getData("standings?league=standard&season=" + seasonYear + "&conference=West");
 
                 // Processa i dati degli standings e inseriscili o aggiornali nel database
                 processStandingsData(standingsResponse, seasonYear);
@@ -60,7 +60,7 @@ public class TeamStandingsInsertion {
 
     private static void insertOrUpdateStandingsInDatabase(int teamId, int seasonYear, int rank, int win, int lose, double winPercentage) {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-            String query = "UPDATE team_statistic SET rank=?, win=?, lose=?, winPercentage=? " +
+            String query = "UPDATE team_statistic SET rank=?, win=?, lose=?, win_percentage=? " +
                     "WHERE id_team=? AND id_season=?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -82,7 +82,7 @@ public class TeamStandingsInsertion {
     private static List<Integer> getSeasonYearsFromDatabase() {
         // Implementa la logica per ottenere gli anni delle stagioni dal database
         // ...
-        List<Integer> data = Collections.singletonList(2022); // Esempio, sostituisci con la tua logica di accesso al database
+        List<Integer> data = Collections.singletonList(2021); // Esempio, sostituisci con la tua logica di accesso al database
         return data;
     }
 

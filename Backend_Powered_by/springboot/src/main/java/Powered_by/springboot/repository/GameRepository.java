@@ -28,8 +28,8 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
             "JOIN g.visitors t_e " +
             "JOIN Score s ON s.team.idTeam = t.idTeam " +
             "JOIN Score s_e ON s_e.team.idTeam = t_e.idTeam " +
-            "WHERE g.start BETWEEN :startOfDay AND :endOfDay " +
-            "GROUP BY t.nameTeam")
+            "WHERE g.start BETWEEN :startOfDay AND :endOfDay and s.game.idGame = g.idGame and s_e.game.idGame = g.idGame " +
+            "group by  t.nameTeam")
     List<Object[]> getGamesForDayRange(
             @Param("startOfDay") LocalDateTime startOfDay,
             @Param("endOfDay") LocalDateTime endOfDay);

@@ -1,5 +1,4 @@
 package Powered_by.springboot.APISport.NBAData;
-
 import Powered_by.springboot.APISport.APIClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,6 +9,8 @@ import java.util.List;
 
 public class TeamGameStatsInsertion {
 
+
+
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/nba";
     private static final String USERNAME = "backend";
     private static final String PASSWORD = "111";
@@ -18,7 +19,7 @@ public class TeamGameStatsInsertion {
         APIClient apiClient = new APIClient();
 
         try {
-            List<Integer> gameIds = getGameIdsFromDatabase(50, 5); // Sostituisci 0 e 10 con i valori desiderati
+            List<Integer> gameIds = getGameIdsFromDatabase(20, 10); // Sostituisci 0 e 10 con i valori desiderati
             for (Integer idGame : gameIds) {
                 String responseData = apiClient.getData("games/statistics/?id=" + idGame);
                 System.out.println("Team Data: " + responseData.toString());
@@ -31,11 +32,11 @@ public class TeamGameStatsInsertion {
         }
     }
 
-    private static List<Integer> getGameIdsFromDatabase( int batchSize, int offset) {
+    private static List<Integer> getGameIdsFromDatabase(int offset, int batchSize) {
         List<Integer> gameIds = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
-            String query = "SELECT id_game FROM game WHERE YEAR(start) = 2023  LIMIT ? OFFSET ?";
+            String query = "SELECT id_game FROM game WHERE start >  '2024-01-19' ORDER BY start asc  LIMIT ? OFFSET ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, batchSize);
                 preparedStatement.setInt(2, offset);
@@ -151,3 +152,4 @@ public class TeamGameStatsInsertion {
 
 
 }
+

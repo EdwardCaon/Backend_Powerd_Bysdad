@@ -21,7 +21,7 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
     @Query(value = "SELECT t.id_team , t.logo, t.name_team, t.colour, " +
             "ts.win,  ts.win_percentage* 100  ,ts.lose, ts.plus_minus " +
             "FROM `team_statistic` as ts " +
-            "JOIN Team t on ts.id_team = t.id_team  " +
+            "JOIN team t on ts.id_team = t.id_team  " +
             "WHERE id_season = :season and t.id_league =  :idLeague " +
             "ORDER BY ts.rank;", nativeQuery = true)
     List<Object[]> getClassifica(@Param("season") int season, int idLeague);

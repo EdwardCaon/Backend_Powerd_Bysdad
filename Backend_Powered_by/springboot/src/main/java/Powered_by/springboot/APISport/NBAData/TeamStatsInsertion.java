@@ -18,7 +18,7 @@ public class TeamStatsInsertion {
             // Ottenere tutti gli id delle squadre dal database
             // offset parto da 0 , ... 10 ,  ... 20 ,...  30 , ... 40, ... 50 , ... 60
             // batchsize: 10 chiamate ogni 10 minuti
-            List<Integer> teamIds = getTeamIdsFromDatabase(60, 10);
+            List<Integer> teamIds = getTeamIdsFromDatabase(50, 10);
 
             // Ottenere tutti gli anni delle stagioni dal database
             List<Integer> seasonYears = getSeasonYearsFromDatabase();
@@ -68,7 +68,7 @@ public class TeamStatsInsertion {
     private static List<Integer> getSeasonYearsFromDatabase() {
         // Implementa la logica per ottenere gli anni delle stagioni dal database
         // ...
-        List<Integer> data = Collections.singletonList(2022); // Esempio, sostituisci con la tua logica di accesso al database
+        List<Integer> data = Collections.singletonList(2021); // Esempio, sostituisci con la tua logica di accesso al database
         return data;
     }
 
@@ -95,7 +95,7 @@ public class TeamStatsInsertion {
                     JSONObject statisticsObject = statisticsArray.getJSONObject(i);
 
                     preparedStatement.setInt(1, teamId);
-                    preparedStatement.setInt(2, 8);
+                    preparedStatement.setInt(2, 7);
                     preparedStatement.setInt(3, statisticsObject.getInt("games"));
                     preparedStatement.setInt(4, statisticsObject.getInt("fastBreakPoints"));
                     preparedStatement.setInt(5, statisticsObject.getInt("pointsInPaint"));

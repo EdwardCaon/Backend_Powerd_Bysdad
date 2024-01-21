@@ -29,7 +29,7 @@ public class PlayerStatsInsertion {
                     System.out.println(responseData);
 
                     // Parse JSON and insert player statistics into the database
-                    insertPlayerStatistics(teamId, seasonYear, responseData);
+                    insertOrUpdatePlayerStatistics(teamId, seasonYear, responseData);
                 }
             }
         } catch (Exception e) {
@@ -71,7 +71,7 @@ public class PlayerStatsInsertion {
         return data;
     }
 
-    private static void insertPlayerStatistics(int teamId, int seasonYear, String json) {
+    private static void insertOrUpdatePlayerStatistics(int teamId, int seasonYear, String json) {
         String jdbcUrl = "jdbc:mysql://localhost:3306/nba";
         String username = "backend";
         String password = "111";
@@ -84,7 +84,18 @@ public class PlayerStatsInsertion {
                     "free_throws_attempted, free_throw_percentage, three_pointers_made, three_pointers_attempted, " +
                     "three_point_percentage, offensive_rebounds, defensive_rebounds, total_rebounds, assist, " +
                     "personal_fouls, steals, turnovers, blocks, plus_minus) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                    "ON DUPLICATE KEY UPDATE " +
+                    "points = VALUES(points), position = VALUES(position), " +
+                    "minutes = VALUES(minutes), field_goals_made = VALUES(field_goals_made), " +
+                    "field_goals_attempted = VALUES(field_goals_attempted), field_goal_percentage = VALUES(field_goal_percentage), " +
+                    "free_throws_made = VALUES(free_throws_made), free_throws_attempted = VALUES(free_throws_attempted), " +
+                    "free_throw_percentage = VALUES(free_throw_percentage), three_pointers_made = VALUES(three_pointers_made), " +
+                    "three_pointers_attempted = VALUES(three_pointers_attempted), three_point_percentage = VALUES(three_point_percentage), " +
+                    "offensive_rebounds = VALUES(offensive_rebounds), defensive_rebounds = VALUES(defensive_rebounds), " +
+                    "total_rebounds = VALUES(total_rebounds), assist = VALUES(assist), " +
+                    "personal_fouls = VALUES(personal_fouls), steals = VALUES(steals), " +
+                    "turnovers = VALUES(turnovers), blocks = VALUES(blocks), plus_minus = VALUES(plus_minus)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
                 for (int i = 0; i < statisticsArray.length(); i++) {
@@ -132,6 +143,7 @@ public class PlayerStatsInsertion {
             e.printStackTrace();
         }
     }
+
 
     private static int getPlayerId(Connection connection, JSONObject playerObject) throws SQLException {
         int playerId = playerObject.getInt("id");

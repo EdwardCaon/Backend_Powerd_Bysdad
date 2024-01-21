@@ -111,8 +111,6 @@ public class TeamGameService {
             response.setColourHome(getString(gameStatsObject[67]));
             response.setColourVisitor(getString(gameStatsObject[68]));
 
-
-
             response.setMinutes(calculateDuration(start, end));
 
             gameStatsResponse.add(response);
@@ -120,6 +118,7 @@ public class TeamGameService {
 
         return gameStatsResponse;
     }
+
 
     /**
      * Metodo per settare le value degli oggetti in numeri Integer e se nulli a 0
