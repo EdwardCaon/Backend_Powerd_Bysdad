@@ -121,10 +121,10 @@ public class TeamGameService {
                 gameStatsResponse.add(response);
             }
         } else {
+
             List<Object[]> gameDetailsStats = gameRepository.findStatsGame(idGame);
             Object[] stats = gameDetailsStats.get(0);
             GameStatsResponse defaultResponse = new GameStatsResponse();
-
             defaultResponse.setGameId(getInteger(stats[0]));  // Set null for Integer fields
             defaultResponse.setArenaName(getString(stats[17]));
             defaultResponse.setCity(getString(stats[18]));

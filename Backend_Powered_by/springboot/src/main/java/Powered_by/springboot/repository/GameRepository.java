@@ -79,7 +79,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
             @Param("startOfDay") LocalDateTime startOfDay);
 
     /**
-     * Metodo per creare l'oggetto delle statistiche qual ora le statistiche non fossero presenti nel db 
+     * Metodo per creare l'oggetto delle statistiche qual ora le statistiche non fossero presenti nel db
      * @param idGame
      * @return
      */

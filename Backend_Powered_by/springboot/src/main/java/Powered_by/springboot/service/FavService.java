@@ -1,23 +1,22 @@
 package Powered_by.springboot.service;
 
+import Powered_by.springboot.entity.FavGame;
 import Powered_by.springboot.entity.FavPlayer;
 import Powered_by.springboot.entity.FavTeam;
 import Powered_by.springboot.entity.User;
+import Powered_by.springboot.payload.request.NewFavGameRequest;
 import Powered_by.springboot.payload.request.TokenUserRequest;
 import Powered_by.springboot.payload.request.NewFavPlayerRequest;
 import Powered_by.springboot.payload.request.NewFavTeamRequest;
-import Powered_by.springboot.payload.response.FavPlayerResponse;
-import Powered_by.springboot.payload.response.FavTeamResponse;
-import Powered_by.springboot.repository.FavPlayerRepository;
-import Powered_by.springboot.repository.FavTeamRepository;
-import Powered_by.springboot.repository.TeamRepository;
-import Powered_by.springboot.repository.UserRepository;
+import Powered_by.springboot.payload.response.*;
+import Powered_by.springboot.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,17 +26,20 @@ import java.util.Optional;
 public class FavService {
     private  FavTeamRepository favTeamRepository;
     private  FavPlayerRepository favPlayerRepository;
+    private FavGameRepository favGameRepository;
     private  UserRepository userRepository;
     private  TeamRepository teamRepository;
     private   TokenService tokenService;
 
+
     @Autowired
-    public FavService (FavTeamRepository favTeamRepository, FavPlayerRepository favPlayerRepository, UserRepository userRepository, TeamRepository teamRepository, TokenService tokenService){
+    public FavService (FavTeamRepository favTeamRepository, FavPlayerRepository favPlayerRepository, FavGameRepository favGameRepository,UserRepository userRepository, TeamRepository teamRepository, TokenService tokenService){
         this.favTeamRepository = favTeamRepository;
         this.favPlayerRepository = favPlayerRepository;
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.tokenService = tokenService;
+        this.favGameRepository = favGameRepository;
     }
 
     /**
@@ -108,11 +110,11 @@ public class FavService {
     public ResponseEntity<?> saveFavPlayer(NewFavPlayerRequest request) {
         Optional<FavPlayer> existingFavPlayer = favPlayerRepository.findByidPlayerAndidUser(request.getIdPlayer(), findIdUser(request.getToken()));
         if (existingFavPlayer.isEmpty()) {
-            // FavTeam does not exist, so save it
+            //inserisce il fav player
             favPlayerRepository.saveFavPlayer(request.getIdPlayer(), findIdUser(request.getToken()));
             return new ResponseEntity<>("FavPlayer saved successfully", HttpStatus.CREATED);
         } else {
-            // FavTeam already exists, so delete it
+            //Cancella il fav player
             favPlayerRepository.deleteFavPlayer(request.getIdPlayer(), findIdUser(request.getToken()));
             return new ResponseEntity<>("FavPlayer deleted successfully", HttpStatus.OK);
         }
@@ -182,4 +184,75 @@ public class FavService {
         return favTeamResults;
     }
 
+    @Transactional
+    public ResponseEntity<?> saveFavGame(NewFavGameRequest request) {
+        Optional<FavGame> existingFavPlayer = favGameRepository.findByidGameAndidUser(request.getIdGame(), findIdUser(request.getToken()));
+        if (existingFavPlayer.isEmpty()) {
+            //inserisce il fav game
+            favGameRepository.saveFavGame(request.getIdGame(), findIdUser(request.getToken()));
+            return new ResponseEntity<>("FavPlayer saved successfully", HttpStatus.CREATED);
+        } else {
+            //Cancella il fav game
+            favGameRepository.deleteFavGame(request.getIdGame(), findIdUser(request.getToken()));
+            return new ResponseEntity<>("FavPlayer deleted successfully", HttpStatus.OK);
+
+        }
+    }
+
+    public List<FavGameResponse> getFavGame(TokenUserRequest request) {
+        Integer tmp_idUser = findIdUser(request.getToken());
+        List<Object[]> resultList = favGameRepository.getFavGame(tmp_idUser);
+        List<FavGameResponse> favGameResponses = mapToFavGameResponse(resultList);
+        return favGameResponses;
+    }
+
+    private List<FavGameResponse> mapToFavGameResponse(List<Object[]> resultList) {
+        List<FavGameResponse> favGameResponses = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            FavGameResponse favGameResponse = new FavGameResponse();
+
+            favGameResponse.setGameId(result[0] != null ? ((Integer) result[0]).intValue() : 0);
+            favGameResponse.setStart((LocalDateTime) result[1]);
+            favGameResponse.setHomeTeamName((String) result[2]);
+            favGameResponse.setHomeTeamLogo((String) result[3]);
+            favGameResponse.setHomeColour((String) result[4]);
+            favGameResponse.setP1Home(result[5] != null ? ((Integer) result[5]).intValue() : 0);
+            favGameResponse.setP2Home(result[6] != null ? ((Integer) result[6]).intValue() : 0);
+            favGameResponse.setP3Home(result[7] != null ? ((Integer) result[7]).intValue() : 0);
+            favGameResponse.setP4Home(result[8] != null ? ((Integer) result[8]).intValue() : 0);
+            favGameResponse.setP5Home(result[9] != null ? ((Integer) result[9]).intValue() : 0);
+            favGameResponse.setVisitorTeamName((String) result[10]);
+            favGameResponse.setVisitorTeamLogo((String) result[11]);
+            favGameResponse.setVisitorsColour((String) result[12]);
+            favGameResponse.setP1Visitor(result[13] != null ? ((Integer) result[13]).intValue() : 0);
+            favGameResponse.setP2Visitor(result[14] != null ? ((Integer) result[14]).intValue() : 0);
+            favGameResponse.setP3Visitor(result[15] != null ? ((Integer) result[15]).intValue() : 0);
+            favGameResponse.setP4Visitor(result[16] != null ? ((Integer) result[16]).intValue() : 0);
+            favGameResponse.setP5Visitor(result[17] != null ? ((Integer) result[17]).intValue() : 0);
+
+            favGameResponses.add(favGameResponse);
+        }
+
+        return favGameResponses;
+    }
+
+    public List<FavGameIdResponse> getIdFavGame(TokenUserRequest request) {
+        Integer tmp_idUser = findIdUser(request.getToken());
+        List<Object[]> resultList = favGameRepository.getIdFavGame(tmp_idUser);
+        List<FavGameIdResponse> favGameIdResponses = mapToFavGameIdResponse(resultList);
+        return favGameIdResponses;
+    }
+
+    private List<FavGameIdResponse> mapToFavGameIdResponse(List<Object[]> resultList) {
+        List<FavGameIdResponse> favGameIdResponses = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            FavGameIdResponse favGameIdResponse = new FavGameIdResponse();
+            favGameIdResponse.setIdGame(result[0] != null ? ((Integer) result[0]).intValue() : 0);
+            favGameIdResponses.add(favGameIdResponse);
+        }
+
+        return favGameIdResponses;
+    }
 }

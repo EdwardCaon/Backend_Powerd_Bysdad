@@ -2,9 +2,13 @@
 package Powered_by.springboot.controller;
 
 
+import Powered_by.springboot.entity.FavGame;
+import Powered_by.springboot.payload.request.NewFavGameRequest;
 import Powered_by.springboot.payload.request.TokenUserRequest;
 import Powered_by.springboot.payload.request.NewFavPlayerRequest;
 import Powered_by.springboot.payload.request.NewFavTeamRequest;
+import Powered_by.springboot.payload.response.FavGameIdResponse;
+import Powered_by.springboot.payload.response.FavGameResponse;
 import Powered_by.springboot.payload.response.FavPlayerResponse;
 import Powered_by.springboot.payload.response.FavTeamResponse;
 import Powered_by.springboot.service.FavService;
@@ -43,6 +47,19 @@ public class FavController {
     @PostMapping("/get/player")
     public List<FavPlayerResponse> getFavPlayer(@RequestBody @Valid TokenUserRequest request) {
         return favService.getFavPlayer(request);
+    }
+
+    public ResponseEntity<?> saveFavGame(@RequestBody @Valid NewFavGameRequest request) {
+        return favService.saveFavGame(request);
+    }
+
+    @PostMapping("/get/game")
+    public List<FavGameResponse> getFavGame(@RequestBody @Valid TokenUserRequest request) {
+        return favService.getFavGame(request);
+    }
+    @PostMapping("/get/idgame")
+    public List<FavGameIdResponse> getIdFavGame(@RequestBody @Valid TokenUserRequest request) {
+        return favService.getIdFavGame(request);
     }
 
 /*
