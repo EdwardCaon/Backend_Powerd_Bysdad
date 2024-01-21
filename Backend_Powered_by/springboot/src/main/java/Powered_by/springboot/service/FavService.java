@@ -123,11 +123,11 @@ public class FavService {
      * @param request contiene il token per individuare l'utente e ricercare i suoi preferiti
      *  @return lista di team favoriti
      */
-    public ResponseEntity<?> getFavTeam(TokenUserRequest request) {
+    public List<FavTeamResponse> getFavTeam(TokenUserRequest request) {
       Integer tmp_idUser = findIdUser(request.getToken());
         List<Object[]> resultList = favTeamRepository.getFavTeam(tmp_idUser);
         List<FavTeamResponse> favTeamResponses = mapToFavTeamResponse(resultList);
-        return ResponseEntity.ok(favTeamResponses);
+        return favTeamResponses;
     }
 
     /**
@@ -156,11 +156,11 @@ public class FavService {
      * @param request contiene il token per individuare l'utente e ricercare i suoi preferiti
      * @return lista di player favoriti
      */
-    public ResponseEntity<?> getFavPlayer(TokenUserRequest request) {
+    public List<FavPlayerResponse> getFavPlayer(TokenUserRequest request) {
         Integer tmp_idUser = findIdUser(request.getToken());
         List<Object[]> resultList = favPlayerRepository.getFavPlayer(tmp_idUser);
         List<FavPlayerResponse> favPlayerResponses = mapToFavPlayerResponse(resultList);
-        return ResponseEntity.ok(favPlayerResponses);
+        return favPlayerResponses;
     }
 
     /**

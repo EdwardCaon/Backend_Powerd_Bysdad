@@ -78,6 +78,20 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
             @Param("idTeam") int idTeam,
             @Param("startOfDay") LocalDateTime startOfDay);
 
-
-
+    /**
+     * Metodo per creare l'oggetto delle statistiche qual ora le statistiche non fossero presenti nel db 
+     * @param idGame
+     * @return
+     */
+    @Query("SELECT g.idGame, " +
+            "t.nameTeam, t.logo, t.colour, s.p1, s.p2, s.p3, s.p4, s.p5, " +
+            "t_e.nameTeam, t_e.logo, t_e.colour ,s_e.p1, s_e.p2, s_e.p3, s_e.p4, s_e.p5, a.nameArena , a.city " +
+            "FROM Game g " +
+            " JOIN Arena  a on g.arena.idArena = a.idArena " +
+            "JOIN g.home t " +
+            "JOIN g.visitors t_e " +
+            "JOIN Score s ON s.team.idTeam = t.idTeam " +
+            "JOIN Score s_e ON s_e.team.idTeam = t_e.idTeam " +
+            "    WHERE g.idGame = :idGame ")
+    List<Object[]> findStatsGame(@Param("idGame") int  idGame);
 }

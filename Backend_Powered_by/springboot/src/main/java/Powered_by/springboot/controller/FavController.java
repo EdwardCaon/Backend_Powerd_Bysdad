@@ -5,11 +5,15 @@ package Powered_by.springboot.controller;
 import Powered_by.springboot.payload.request.TokenUserRequest;
 import Powered_by.springboot.payload.request.NewFavPlayerRequest;
 import Powered_by.springboot.payload.request.NewFavTeamRequest;
+import Powered_by.springboot.payload.response.FavPlayerResponse;
+import Powered_by.springboot.payload.response.FavTeamResponse;
 import Powered_by.springboot.service.FavService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/fav")
@@ -32,12 +36,12 @@ public class FavController {
 
 
     @PostMapping("/get/team")
-    public ResponseEntity<?> getFavTeam(@RequestBody @Valid TokenUserRequest request) {
+    public List<FavTeamResponse> getFavTeam(@RequestBody @Valid TokenUserRequest request) {
         return favService.getFavTeam(request);
     }
 
     @PostMapping("/get/player")
-    public ResponseEntity<?> getFavPlayer(@RequestBody @Valid TokenUserRequest request) {
+    public List<FavPlayerResponse> getFavPlayer(@RequestBody @Valid TokenUserRequest request) {
         return favService.getFavPlayer(request);
     }
 
