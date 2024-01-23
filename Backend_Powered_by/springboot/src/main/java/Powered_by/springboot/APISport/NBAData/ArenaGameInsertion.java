@@ -49,7 +49,14 @@ public class ArenaGameInsertion {
             String arenaInsertQuery = "INSERT INTO arena (name_arena, city, state, country) VALUES (?, ?, ?, ?)";
             String gameInsertQuery = "INSERT INTO game (id_game, home, visitors, start, end, duration, current_period, " +
                     "total_period, status, arena, season, official) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
+                    "ON DUPLICATE KEY UPDATE 'start' = VALUE('start')," +
+                    " 'end' = VALUE('end'), " +
+                    "duration = VALUE(duration), " +
+                    "current_period = VALUES(current_period), " +
+            "total_period = VALUES(total_period), " +
+                    "`status` = VALUES(`status`), " +
+                    "official = VALUES(official)";
 
             try (PreparedStatement arenaStatement = connection.prepareStatement(arenaInsertQuery, Statement.RETURN_GENERATED_KEYS);
                  PreparedStatement gameStatement = connection.prepareStatement(gameInsertQuery)) {
