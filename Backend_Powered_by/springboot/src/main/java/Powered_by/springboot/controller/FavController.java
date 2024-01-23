@@ -49,6 +49,7 @@ public class FavController {
         return favService.getFavPlayer(request);
     }
 
+    @PostMapping("/new/game")
     public ResponseEntity<?> saveFavGame(@RequestBody @Valid NewFavGameRequest request) {
         return favService.saveFavGame(request);
     }
