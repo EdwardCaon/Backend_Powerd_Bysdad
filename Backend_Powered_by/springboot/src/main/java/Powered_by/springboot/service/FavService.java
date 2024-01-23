@@ -255,4 +255,42 @@ public class FavService {
 
         return favGameIdResponses;
     }
+
+    public List<FavTeamIdResponse> getIdFavTeam(TokenUserRequest request) {
+        Integer tmp_idUser = findIdUser(request.getToken());
+        List<Object[]> resultList = favTeamRepository.getIdFavTeam(tmp_idUser);
+        List<FavTeamIdResponse> favGameIdResponses = mapToFavTeamIdResponse(resultList);
+        return favGameIdResponses;
+    }
+
+    private List<FavTeamIdResponse> mapToFavTeamIdResponse(List<Object[]> resultList) {
+        List<FavTeamIdResponse> favTeamIdResponses = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            FavTeamIdResponse favTeamIdResponse = new FavTeamIdResponse();
+            favTeamIdResponse.setIdTeam(result[0] != null ? ((Integer) result[0]).intValue() : 0);
+            favTeamIdResponses.add(favTeamIdResponse);
+        }
+        return favTeamIdResponses;
+    }
+
+    public List<FavPlayerIdResponse> getIdFavPlayer(TokenUserRequest request) {
+        Integer tmp_idUser = findIdUser(request.getToken());
+        List<Object[]> resultList = favPlayerRepository.getIdPlayerTeam(tmp_idUser);
+        List<FavPlayerIdResponse> favPlayerIdResponse = mapToFavPlayerIdResponse(resultList);
+        return favPlayerIdResponse;
+    }
+
+    private List<FavPlayerIdResponse> mapToFavPlayerIdResponse(List<Object[]> resultList) {
+        List<FavPlayerIdResponse> favPlayerIdResponses = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            FavPlayerIdResponse favPlayerIdResponse = new FavPlayerIdResponse();
+            favPlayerIdResponse.setIdPlayer(result[0] != null ? ((Integer) result[0]).intValue() : 0);
+            favPlayerIdResponses.add(favPlayerIdResponse);
+        }
+        return favPlayerIdResponses;
+    }
+
+
 }

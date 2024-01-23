@@ -7,10 +7,7 @@ import Powered_by.springboot.payload.request.NewFavGameRequest;
 import Powered_by.springboot.payload.request.TokenUserRequest;
 import Powered_by.springboot.payload.request.NewFavPlayerRequest;
 import Powered_by.springboot.payload.request.NewFavTeamRequest;
-import Powered_by.springboot.payload.response.FavGameIdResponse;
-import Powered_by.springboot.payload.response.FavGameResponse;
-import Powered_by.springboot.payload.response.FavPlayerResponse;
-import Powered_by.springboot.payload.response.FavTeamResponse;
+import Powered_by.springboot.payload.response.*;
 import Powered_by.springboot.service.FavService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +59,16 @@ public class FavController {
     public List<FavGameIdResponse> getIdFavGame(@RequestBody @Valid TokenUserRequest request) {
         return favService.getIdFavGame(request);
     }
+    @PostMapping("/get/idTeam")
+    public List<FavTeamIdResponse> getIdFavTeam(@RequestBody @Valid TokenUserRequest request) {
+        return favService.getIdFavTeam(request);
+    }
+    @PostMapping("/get/idPlayer")
+    public List<FavPlayerIdResponse> getIdFavPlayer(@RequestBody @Valid TokenUserRequest request) {
+        return favService.getIdFavPlayer(request);
+    }
+
+
 
 /*
     @GetMapping("/season/stats/{idPlayer}")
