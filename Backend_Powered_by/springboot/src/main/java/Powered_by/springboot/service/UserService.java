@@ -1,16 +1,21 @@
 package Powered_by.springboot.service;
 
+import Powered_by.springboot.controller.UpdateEmailResponse;
 import Powered_by.springboot.entity.User;
-import Powered_by.springboot.payload.request.SigninRequest;
-import Powered_by.springboot.payload.request.SignupRequest;
+import Powered_by.springboot.payload.request.*;
 import Powered_by.springboot.payload.response.AuthResponse;
+import Powered_by.springboot.payload.response.FavTeamResponse;
+import Powered_by.springboot.payload.response.UpdateFirstnameResponse;
+import Powered_by.springboot.payload.response.UpdateLastnameResponse;
 import Powered_by.springboot.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -70,4 +75,31 @@ public class UserService {
         }
     }
 
+    /**
+     * Trova un utente tramite token
+     * @param token token per individuare l'utente
+     * @return ritorna l'id dell utente associato al token
+     */
+    public int findIdUser(String token){
+        int userId = tokenService.getUserIdFromToken(token).getId();
+        return userId;
+    }
+    @Transactional
+    public UpdateFirstnameResponse updateFirstname(UpdateFirstnameRequest request) {
+        userRepository.updateFirstname(findIdUser(request.getToken()), request.getFirstname());
+        UpdateFirstnameResponse updateFirstnameResponse = new UpdateFirstnameResponse( request.getFirstname());
+        return updateFirstnameResponse;
+    }
+    @Transactional
+    public UpdateLastnameResponse updateLastname(UpdateLastnameRequest request) {
+        userRepository.updateLastname(findIdUser(request.getToken()), request.getLastname());
+        UpdateLastnameResponse updateLastnameResponse = new UpdateLastnameResponse( request.getLastname());
+        return updateLastnameResponse;
+    }
+    @Transactional
+    public UpdateEmailResponse updateEmail(UpdateEmailRequest request) {
+        userRepository.updateEmail(findIdUser(request.getToken()), request.getEmail());
+        UpdateEmailResponse updateEmailResponse = new UpdateEmailResponse( request.getEmail());
+        return updateEmailResponse;
+    }
 }

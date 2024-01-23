@@ -52,11 +52,4 @@ public interface FavPlayerRepository extends JpaRepository<FavPlayer, Long> {
             "FROM FavPlayer fp " +
             "WHERE fp.player.idPlayer = :idPlayer and fp.user.idUser = :idUser")
     Optional<FavPlayer> findByidPlayerAndidUser(int idPlayer, int idUser);
-    @Query("SELECT " +
-            "fp.player.idPlayer " +
-            "FROM FavPlayer fp " +
-            "WHERE fp.user.idUser = :tmp_idUser")
-    List<Object[]> getIdPlayerTeam(@Param("tmp_idUser") int tmp_idUser);
-
-
 }

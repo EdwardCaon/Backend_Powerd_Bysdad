@@ -1,15 +1,13 @@
 package Powered_by.springboot.APISport.NBAData;
+
 import Powered_by.springboot.APISport.APIClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.Collections;
 import java.util.List;
 
-@Component
 public class TeamStandingsInsertion {
 
     // Definisci le tue variabili di connessione al database
@@ -17,48 +15,41 @@ public class TeamStandingsInsertion {
     private static final String username = "backend";
     private static final String password = "111";
 
-    @Scheduled(cron = "0 5 4 * * *") // Esegui alle 4:5 ogni giorno
-    public void teamStandingsEastInsertionAtScheduledTime() {
-        processStandingsDataForConference("East");
-    }
-
-    @Scheduled(cron = "0 7 4 * * *") // Esegui alle 4:7 ogni giorno
-    public void teamStandingsWestInsertionAtScheduledTime() {
-        processStandingsDataForConference("West");
-    }
-
-    private void processStandingsDataForConference(String conference) {
+    public static void main(String[] args) {
         APIClient apiClient = new APIClient();
 
         try {
+            // Ottieni tutti gli anni delle stagioni dal database
             List<Integer> seasonYears = getSeasonYearsFromDatabase();
 
-            System.out.println("Aggiornamento classifica " + conference + " in corso");
-
-
+            // Itera su tutte le stagioni
             for (Integer seasonYear : seasonYears) {
-                String standingsResponse = apiClient.getData("standings?league=standard&season=" + seasonYear + "&conference=" + conference);
+                // Effettua una chiamata per ottenere i dati degli standings
+                String standingsResponse = apiClient.getData("standings?league=standard&season=" + seasonYear + "&conference=West");
+
+                // Processa i dati degli standings e inseriscili o aggiornali nel database
                 processStandingsData(standingsResponse, seasonYear);
-                System.out.println("Aggiornamento classifica " + conference + " termitano con successo");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void processStandingsData(String standingsJson, int seasonYear) {
+    private static void processStandingsData(String standingsJson, int seasonYear) {
         try {
             JSONArray standingsArray = new JSONObject(standingsJson).getJSONArray("response");
 
             for (int i = 0; i < standingsArray.length(); i++) {
                 JSONObject standingsObject = standingsArray.getJSONObject(i);
                 if (standingsObject.has("team") && standingsObject.has("win")) {
+                    // Ottieni i dati specifici per ogni team dalla risposta API
                     int teamId = standingsObject.getJSONObject("team").getInt("id");
                     int rank = standingsObject.getJSONObject("conference").getInt("rank");
                     int win = standingsObject.getJSONObject("win").getInt("total");
                     int lose = standingsObject.getJSONObject("loss").getInt("total");
                     double winPercentage = Double.parseDouble(standingsObject.getJSONObject("win").getString("percentage"));
 
+                    // Inserisci o aggiorna i dati degli standings nel database
                     insertOrUpdateStandingsInDatabase(teamId, seasonYear, rank, win, lose, winPercentage);
                 }
             }
@@ -67,7 +58,7 @@ public class TeamStandingsInsertion {
         }
     }
 
-    private void insertOrUpdateStandingsInDatabase(int teamId, int seasonYear, int rank, int win, int lose, double winPercentage) {
+    private static void insertOrUpdateStandingsInDatabase(int teamId, int seasonYear, int rank, int win, int lose, double winPercentage) {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
             String query = "UPDATE team_statistic SET rank=?, win=?, lose=?, win_percentage=? " +
                     "WHERE id_team=? AND id_season=?";
@@ -88,12 +79,16 @@ public class TeamStandingsInsertion {
         }
     }
 
-    private List<Integer> getSeasonYearsFromDatabase() {
-        List<Integer> data = Collections.singletonList(2023);
+    private static List<Integer> getSeasonYearsFromDatabase() {
+        // Implementa la logica per ottenere gli anni delle stagioni dal database
+        // ...
+        List<Integer> data = Collections.singletonList(2021); // Esempio, sostituisci con la tua logica di accesso al database
         return data;
     }
 
-    private int determineDbSeason(int apiSeasonYear) {
+    private static int determineDbSeason(int apiSeasonYear) {
+        // Mappa l'anno della stagione API all'anno della stagione nel tuo database
+        // Modifica questa logica in base ai tuoi requisiti
         int dbSeason;
         switch (apiSeasonYear) {
             case 2023:
@@ -106,6 +101,7 @@ public class TeamStandingsInsertion {
                 dbSeason = 7;
                 break;
             default:
+                // Gestisci altri casi se necessario
                 dbSeason = -1;
         }
         return dbSeason;

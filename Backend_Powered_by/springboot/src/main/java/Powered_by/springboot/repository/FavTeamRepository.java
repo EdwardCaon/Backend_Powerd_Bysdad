@@ -52,9 +52,4 @@ public interface FavTeamRepository extends JpaRepository<FavTeam, Long> {
     @Query(value = "DELETE FROM fav_team WHERE id_user = :idUser AND id_team = :idTeam", nativeQuery = true)
     void deleteFavTeam( @Param("idTeam") int idTeam,@Param("idUser") int idUser);
 
-    @Query("SELECT " +
-            "ft.team.idTeam " +
-            "FROM FavTeam ft " +
-            "WHERE ft.user.idUser = :tmp_idUser")
-    List<Object[]> getIdFavTeam(    @Param("tmp_idUser") int tmp_idUser);
 }

@@ -16,9 +16,9 @@ public class TeamStatsInsertion {
 
         try {
             // Ottenere tutti gli id delle squadre dal database
-            // offset parto da 0 , ... 10 ,  ... 20 ,...  30
-            // batchsize: 10 chiamate ogni 10 minuti a partire dalle 4 20 del mattino  poi 4 22 poi 4 24
-            List<Integer> teamIds = getTeamIdsFromDatabase(10, 10);
+            // offset parto da 0 , ... 10 ,  ... 20 ,...  30 , ... 40, ... 50 , ... 60
+            // batchsize: 10 chiamate ogni 10 minuti
+            List<Integer> teamIds = getTeamIdsFromDatabase(50, 10);
 
             // Ottenere tutti gli anni delle stagioni dal database
             List<Integer> seasonYears = getSeasonYearsFromDatabase();
@@ -47,7 +47,7 @@ public class TeamStatsInsertion {
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
             // Utilizza OFFSET e LIMIT per ottenere un batch di ID del team
-            String query = "SELECT id_team FROM team WHERE id_league = 1 or id_league = 2 LIMIT ? OFFSET ?";
+            String query = "SELECT id_team FROM team LIMIT ? OFFSET ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, batchSize);
                 preparedStatement.setInt(2, offset);
@@ -68,7 +68,7 @@ public class TeamStatsInsertion {
     private static List<Integer> getSeasonYearsFromDatabase() {
         // Implementa la logica per ottenere gli anni delle stagioni dal database
         // ...
-        List<Integer> data = Collections.singletonList(2023); // Esempio, sostituisci con la tua logica di accesso al database
+        List<Integer> data = Collections.singletonList(2021); // Esempio, sostituisci con la tua logica di accesso al database
         return data;
     }
 
@@ -88,41 +88,14 @@ public class TeamStatsInsertion {
                     "field_goals_made, field_goals_attempted, field_goal_percentage, free_throws_made, free_throws_attempted, " +
                     "free_throw_percentage, three_pointers_made, three_pointers_attempted, three_point_percentage, " +
                     "offensive_rebounds, defensive_rebounds, total_rebounds, assist, personal_fouls, steals, turnovers, " +
-                    "blocks, plus_minus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
-                    "ON DUPLICATE KEY UPDATE games_played = VALUE(games_played), " +
-                    "fast_break_points = VALUES(fast_break_points), " +
-            "points_in_paint = VALUES(points_in_paint), " +
-                    "biggest_lead = VALUES(biggest_lead), " +
-                    "second_chance_points = VALUES(second_chance_points), " +
-                    "points_off_turnovers = VALUES(points_off_turnovers), " +
-                    "longest_run = VALUES(longest_run), " +
-                    "points = VALUES(points), " +
-                    "field_goals_made = VALUES(field_goals_made), " +
-                    "field_goals_attempted = VALUES(field_goals_attempted), " +
-                    "field_goal_percentage = VALUES(field_goal_percentage), " +
-                    "free_throws_made = VALUES(free_throws_made), " +
-                    "free_throws_attempted = VALUES(free_throws_attempted), " +
-                    "free_throw_percentage = VALUES(free_throw_percentage), " +
-                    "three_pointers_made = VALUES(three_pointers_made), " +
-                    "three_pointers_attempted = VALUES(three_pointers_attempted), " +
-                    "three_point_percentage = VALUES(three_point_percentage), " +
-                    "offensive_rebounds = VALUES(offensive_rebounds), " +
-                    "defensive_rebounds = VALUES(defensive_rebounds), " +
-                    "total_rebounds = VALUES(total_rebounds), " +
-                    "assist = VALUES(assist), " +
-                    "personal_fouls = VALUES(personal_fouls), " +
-                    "steals = VALUES(steals), " +
-                    "turnovers = VALUES(turnovers), " +
-                    "blocks = VALUES(blocks), " +
-                    "plus_minus = VALUES(plus_minus)";
-                    ;
+                    "blocks, plus_minus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
                 for (int i = 0; i < statisticsArray.length(); i++) {
                     JSONObject statisticsObject = statisticsArray.getJSONObject(i);
 
                     preparedStatement.setInt(1, teamId);
-                    preparedStatement.setInt(2, 8);
+                    preparedStatement.setInt(2, 7);
                     preparedStatement.setInt(3, statisticsObject.getInt("games"));
                     preparedStatement.setInt(4, statisticsObject.getInt("fastBreakPoints"));
                     preparedStatement.setInt(5, statisticsObject.getInt("pointsInPaint"));

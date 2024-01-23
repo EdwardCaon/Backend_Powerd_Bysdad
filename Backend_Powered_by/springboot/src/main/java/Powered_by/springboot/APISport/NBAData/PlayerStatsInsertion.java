@@ -9,49 +9,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import Powered_by.springboot.APISport.APIClient;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
-@Component
 public class PlayerStatsInsertion {
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/nba";
-    private static final String USERNAME = "backend";
-    private static final String PASSWORD = "111";
-
-    @Scheduled(cron = "0 27 4 * * *") //
-    public void runFirstBatch() {
-        runBatch(0, 10);
-    }
-
-    @Scheduled(cron = "0 30 4 * * *")
-    public void runSecondBatch() {
-        runBatch(10, 10);
-    }
-
-    @Scheduled(cron = "0 33 4 * * *")
-    public void runThirdBatch() {
-        runBatch(20, 10);
-    }
-
-    private void runBatch(int offset, int batchSize) {
+    public static void main(String[] args) {
         APIClient apiClient = new APIClient();
 
         try {
-            List<Integer> teamIds = getTeamIdsFromDatabase(offset, batchSize);
+            // Get all team IDs from the database
+            List<Integer> teamIds = getTeamIdsFromDatabase(0, 10);
+
+            // Get all season years from the database
             List<Integer> seasonYears = getSeasonYearsFromDatabase();
 
+            // Iterate through teams and seasons
             for (Integer teamId : teamIds) {
                 for (Integer seasonYear : seasonYears) {
+                    // Make API call for player statistics
                     String responseData = apiClient.getData("players/statistics?team=" + teamId + "&season=" + seasonYear);
                     System.out.println(responseData);
+
+                    // Parse JSON and insert player statistics into the database
                     insertOrUpdatePlayerStatistics(teamId, seasonYear, responseData);
                 }
             }
@@ -59,6 +36,7 @@ public class PlayerStatsInsertion {
             e.printStackTrace();
         }
     }
+
     private static List<Integer> getTeamIdsFromDatabase(int offset, int batchSize) {
         List<Integer> teamIds = new ArrayList<>();
 
@@ -68,7 +46,7 @@ public class PlayerStatsInsertion {
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
             // Use OFFSET and LIMIT to get a batch of team IDs
-            String query = "SELECT id_team FROM  team  WHERE id_league = 1 or id_league = 2 LIMIT ? OFFSET ?";
+            String query = "SELECT id_team FROM team LIMIT ? OFFSET ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, batchSize);
                 preparedStatement.setInt(2, offset);

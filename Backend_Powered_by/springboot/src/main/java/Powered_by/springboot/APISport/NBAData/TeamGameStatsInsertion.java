@@ -1,44 +1,29 @@
 package Powered_by.springboot.APISport.NBAData;
-
 import Powered_by.springboot.APISport.APIClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class TeamGameStatsInsertion {
+
+
 
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/nba";
     private static final String USERNAME = "backend";
     private static final String PASSWORD = "111";
 
-    @Scheduled(cron = "0 15 4 * * *") // Esegui alle 4:15 ogni giorno
-    public void runFirstBatch() {
-        System.out.println("Inizio inserimento team game stats");
-        runBatch(0, 10);
-    }
-
-    @Scheduled(cron = "0 17 4 * * *") // Esegui alle 4:17 ogni giorno
-    public void runSecondBatch() {
-        runBatch(10, 10);
-        System.out.println("Fine inserimento team game stats");
-    }
-
-    private void runBatch(int offset, int batchSize) {
+    public static void main(String[] args) {
         APIClient apiClient = new APIClient();
 
         try {
-            List<Integer> gameIds = getGameIdsFromDatabase(offset, batchSize);
+            List<Integer> gameIds = getGameIdsFromDatabase(20, 10); // Sostituisci 0 e 10 con i valori desiderati
             for (Integer idGame : gameIds) {
                 String responseData = apiClient.getData("games/statistics/?id=" + idGame);
                 System.out.println("Team Data: " + responseData.toString());
+                // Altre operazioni...
                 insertTeamGameStats(idGame, responseData);
             }
 
@@ -47,23 +32,14 @@ public class TeamGameStatsInsertion {
         }
     }
 
-
     private static List<Integer> getGameIdsFromDatabase(int offset, int batchSize) {
         List<Integer> gameIds = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
-            String query = "SELECT id_game FROM game WHERE start > ? AND start < ? ORDER BY start ASC LIMIT ? OFFSET ?";
+            String query = "SELECT id_game FROM game WHERE start >  '2024-01-19' ORDER BY start asc  LIMIT ? OFFSET ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                // Setta i parametri per la data di inizio (oggi - 2 giorni)
-                LocalDate startDate = LocalDate.now().minusDays(2);
-                preparedStatement.setString(1, startDate.format(DateTimeFormatter.ISO_DATE));
-
-                // Setta i parametri per la data di fine (domani)
-                LocalDate endDate = LocalDate.now().plusDays(1);
-                preparedStatement.setString(2, endDate.format(DateTimeFormatter.ISO_DATE));
-
-                preparedStatement.setInt(3, batchSize);
-                preparedStatement.setInt(4, offset);
+                preparedStatement.setInt(1, batchSize);
+                preparedStatement.setInt(2, offset);
 
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
@@ -83,33 +59,7 @@ public class TeamGameStatsInsertion {
             String insertQuery = "INSERT INTO team_game_stats (id_game, id_team, points_in_paint, biggest_lead, " +
                     "second_chance_points, points_off_turnovers, longest_run, points, fgm, fga, fgp, ftm, fta, ftp, tpm, tpa, " +
                     "tpp, off_reb, tot_reb, assists, p_fouls, steals, turnovers, blocks, plus_minus, min) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-            "ON DUPLICATE KEY UPDATE " +
-            "points_in_paint = VALUES(points_in_paint), " +
-                    "biggest_lead = VALUES(biggest_lead), " +
-                    "second_chance_points = VALUES(second_chance_points), " +
-                    "points_off_turnovers = VALUES(points_off_turnovers), " +
-                    "longest_run = VALUES(longest_run), " +
-                    "points = VALUES(points), " +
-                    "fgm = VALUES(fgm), " +
-                    "fga = VALUES(fga), " +
-                    "fgp = VALUES(fgp), " +
-                    "ftm = VALUES(ftm), " +
-                    "fta = VALUES(fta), " +
-                    "ftp = VALUES(ftp), " +
-                    "tpm = VALUES(tpm), " +
-                    "tpa = VALUES(tpa), " +
-                    "tpp = VALUES(tpp), " +
-                    "off_reb = VALUES(off_reb), " +
-                    "tot_reb = VALUES(tot_reb), " +
-                    "assists = VALUES(assists), " +
-                    "p_fouls = VALUES(p_fouls), " +
-                    "steals = VALUES(steals), " +
-                    "turnovers = VALUES(turnovers), " +
-                    "blocks = VALUES(blocks), " +
-                    "plus_minus = VALUES(plus_minus), " +
-                    "min = VALUES(min)";
-
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
                 // Parse e inserisci i dati dalla risposta dell'API

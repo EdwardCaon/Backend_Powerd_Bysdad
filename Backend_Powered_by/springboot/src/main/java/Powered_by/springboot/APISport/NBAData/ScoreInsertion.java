@@ -1,37 +1,27 @@
 package Powered_by.springboot.APISport.NBAData;
+
 import Powered_by.springboot.APISport.APIClient;
-import Powered_by.springboot.APISport.NBAData.ArenaGameInsertion;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
-@Component
 public class ScoreInsertion {
 
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/nba";
     private static final String USERNAME = "backend";
     private static final String PASSWORD = "111";
 
-    @Scheduled(cron = "0 0 4 * * *") // Esegui alle 4:00 ogni giorno
-    public void insertScoresAtScheduledTime() {
-        System.out.println("Aggiornamento punteggi in corso");
+    public static void main(String[] args) {
+        APIClient apiClient = new APIClient();
+
         try {
-            APIClient apiClient = new APIClient();
             List<Integer> seasonYears = ArenaGameInsertion.getSeasonYearsFromDatabase();
 
             for (Integer seasonYear : seasonYears) {
                 String responseData = apiClient.getData("games/?season=" + seasonYear);
-
                 insertScores(responseData);
-                System.out.println("Aggiornamento punteggi finito");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -27,7 +27,7 @@ public class TokenService {
         /**
          * The constant EXPIRE_AFTER.
          */
-        public static  final int EXPIRE_AFTER=3600 ; //tempo di scadenza in secondi
+        public static  final int EXPIRE_AFTER=3600; //tempo di scadenza in secondi
 
         /**
          * Metodo per implementare il token<br>
